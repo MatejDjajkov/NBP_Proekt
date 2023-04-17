@@ -42,17 +42,16 @@ CREATE TABLE Employee (
   Company    int4 NOT NULL, 
   PRIMARY KEY (EmployeeID));
 CREATE TABLE MusicGroup (
-  MusicGroupID       SERIAL NOT NULL, 
-  GroupName          varchar(255) NOT NULL UNIQUE, 
-  FormationDate      date NOT NULL, 
-  ActiveStatus       varchar(255) NOT NULL, 
-  MusicianMusicianID int4 NOT NULL, 
+  MusicGroupID  SERIAL NOT NULL, 
+  GroupName     varchar(255) NOT NULL UNIQUE, 
+  FormationDate date NOT NULL, 
+  ActiveStatus  varchar(255) NOT NULL, 
   PRIMARY KEY (MusicGroupID));
 CREATE TABLE MusicGroup_Concert (
-  MusicGroupMusicGroupID int4 NOT NULL, 
-  ConcertConcertID       int4 NOT NULL, 
-  PRIMARY KEY (MusicGroupMusicGroupID, 
-  ConcertConcertID));
+  MusicGroupID int4 NOT NULL, 
+  ConcertID    int4 NOT NULL, 
+  PRIMARY KEY (MusicGroupID, 
+  ConcertID));
 CREATE TABLE Musician (
   MusicianID   SERIAL NOT NULL, 
   FirstName    varchar(255) NOT NULL, 
@@ -64,12 +63,12 @@ CREATE TABLE Musician (
   BirthDate    date NOT NULL, 
   PRIMARY KEY (MusicianID));
 CREATE TABLE Musician_MusicGroup (
-  MusicianMusicianID     int4 NOT NULL, 
-  MusicGroupMusicGroupID int4 NOT NULL, 
-  Joined                 date NOT NULL, 
-  LeftDate               date, 
-  PRIMARY KEY (MusicianMusicianID, 
-  MusicGroupMusicGroupID));
+  MusicianID   int4 NOT NULL, 
+  MusicGroupID int4 NOT NULL, 
+  Joined       date NOT NULL, 
+  LeftDate     date, 
+  PRIMARY KEY (MusicianID, 
+  MusicGroupID));
 CREATE TABLE "Order" (
   OrderID     SERIAL NOT NULL, 
   CustomerID  int4 NOT NULL, 
@@ -116,10 +115,10 @@ CREATE TABLE SoloMusician (
   MusicianID int4 NOT NULL, 
   PRIMARY KEY (MusicianID));
 CREATE TABLE SoloMusician_Concert (
-  SoloMusicianMusicianID int4 NOT NULL, 
-  ConcertConcertID       int4 NOT NULL, 
-  PRIMARY KEY (SoloMusicianMusicianID, 
-  ConcertConcertID));
+  SoloMusicianID int4 NOT NULL, 
+  ConcertID      int4 NOT NULL, 
+  PRIMARY KEY (SoloMusicianID, 
+  ConcertID));
 CREATE TABLE Ticket (
   TicketID              SERIAL NOT NULL, 
   OrderID               int4, 
@@ -133,12 +132,12 @@ CREATE TABLE Ticket (
   Row                   int4, 
   PRIMARY KEY (TicketID));
 CREATE TABLE TicketOwnerHistory (
-  CustomerCustomerID int4 NOT NULL, 
-  TicketTicketID     int4 NOT NULL, 
-  "From"             date NOT NULL, 
-  "To"               date, 
-  PRIMARY KEY (CustomerCustomerID, 
-  TicketTicketID));
+  CustomerID int4 NOT NULL, 
+  TicketID   int4 NOT NULL, 
+  "From"     date NOT NULL, 
+  "To"       date, 
+  PRIMARY KEY (CustomerID, 
+  TicketID));
 CREATE TABLE "User" (
   UserID      SERIAL NOT NULL, 
   Username    varchar(255) NOT NULL UNIQUE, 
@@ -150,16 +149,16 @@ CREATE TABLE "User" (
   PhoneNumber varchar(255), 
   PRIMARY KEY (UserID));
 ALTER TABLE Calendar ADD CONSTRAINT FKCalendar127966 FOREIGN KEY (ConcertLocationID) REFERENCES ConcertLocation (LocationID);
-ALTER TABLE Musician_MusicGroup ADD CONSTRAINT FKMusician_M254255 FOREIGN KEY (MusicGroupMusicGroupID) REFERENCES MusicGroup (MusicGroupID);
-ALTER TABLE Musician_MusicGroup ADD CONSTRAINT FKMusician_M421452 FOREIGN KEY (MusicianMusicianID) REFERENCES Musician (MusicianID);
+ALTER TABLE Musician_MusicGroup ADD CONSTRAINT FKMusician_M109284 FOREIGN KEY (MusicGroupID) REFERENCES MusicGroup (MusicGroupID);
+ALTER TABLE Musician_MusicGroup ADD CONSTRAINT FKMusician_M853110 FOREIGN KEY (MusicianID) REFERENCES Musician (MusicianID);
 ALTER TABLE Ticket ADD CONSTRAINT FKTicket512321 FOREIGN KEY (ShopLocationID) REFERENCES PhysicalShop (LocationID);
 ALTER TABLE Payment ADD CONSTRAINT FKPayment617515 FOREIGN KEY (CustomerID) REFERENCES Customer (CustomerID);
-ALTER TABLE TicketOwnerHistory ADD CONSTRAINT FKTicketOwne745597 FOREIGN KEY (TicketTicketID) REFERENCES Ticket (TicketID);
-ALTER TABLE TicketOwnerHistory ADD CONSTRAINT FKTicketOwne172088 FOREIGN KEY (CustomerCustomerID) REFERENCES Customer (CustomerID);
-ALTER TABLE SoloMusician_Concert ADD CONSTRAINT FKSoloMusici255621 FOREIGN KEY (ConcertConcertID) REFERENCES Concert (ConcertID);
-ALTER TABLE SoloMusician_Concert ADD CONSTRAINT FKSoloMusici874472 FOREIGN KEY (SoloMusicianMusicianID) REFERENCES SoloMusician (MusicianID);
-ALTER TABLE MusicGroup_Concert ADD CONSTRAINT FKMusicGroup769927 FOREIGN KEY (ConcertConcertID) REFERENCES Concert (ConcertID);
-ALTER TABLE MusicGroup_Concert ADD CONSTRAINT FKMusicGroup268093 FOREIGN KEY (MusicGroupMusicGroupID) REFERENCES MusicGroup (MusicGroupID);
+ALTER TABLE TicketOwnerHistory ADD CONSTRAINT FKTicketOwne653324 FOREIGN KEY (TicketID) REFERENCES Ticket (TicketID);
+ALTER TABLE TicketOwnerHistory ADD CONSTRAINT FKTicketOwne203685 FOREIGN KEY (CustomerID) REFERENCES Customer (CustomerID);
+ALTER TABLE SoloMusician_Concert ADD CONSTRAINT FKSoloMusici917899 FOREIGN KEY (ConcertID) REFERENCES Concert (ConcertID);
+ALTER TABLE SoloMusician_Concert ADD CONSTRAINT FKSoloMusici113269 FOREIGN KEY (SoloMusicianID) REFERENCES SoloMusician (MusicianID);
+ALTER TABLE MusicGroup_Concert ADD CONSTRAINT FKMusicGroup28142 FOREIGN KEY (ConcertID) REFERENCES Concert (ConcertID);
+ALTER TABLE MusicGroup_Concert ADD CONSTRAINT FKMusicGroup413064 FOREIGN KEY (MusicGroupID) REFERENCES MusicGroup (MusicGroupID);
 ALTER TABLE SoloMusician ADD CONSTRAINT FKSoloMusici601613 FOREIGN KEY (MusicianID) REFERENCES Musician (MusicianID);
 ALTER TABLE ResaleListing ADD CONSTRAINT FKResaleList483985 FOREIGN KEY (TicketID) REFERENCES Ticket (TicketID);
 ALTER TABLE ResaleListing ADD CONSTRAINT FKResaleList96913 FOREIGN KEY (SellerCustomerID) REFERENCES Customer (CustomerID);
