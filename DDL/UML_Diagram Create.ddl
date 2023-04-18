@@ -203,5 +203,3 @@ CHECK (TimeSlot >= 0 AND TimeSlot <= 23);
 ALTER TABLE ConcertLocation
 ADD CONSTRAINT check_lat_long
 CHECK (latitude BETWEEN -90 and 90 AND longitude BETWEEN -180 and 180);
-
-
