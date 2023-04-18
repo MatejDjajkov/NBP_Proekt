@@ -176,3 +176,32 @@ ALTER TABLE Ticket ADD CONSTRAINT FKTicket554930 FOREIGN KEY (OrderID) REFERENCE
 ALTER TABLE Ticket ADD CONSTRAINT FKTicket818924 FOREIGN KEY (ConcertID) REFERENCES Concert (ConcertID);
 ALTER TABLE Concert ADD CONSTRAINT FKConcert232883 FOREIGN KEY (ConcertLocationID) REFERENCES ConcertLocation (LocationID);
 
+ALTER TABLE Musician
+ADD CONSTRAINT check_PhoneNumber
+CHECK (PhoneNumber LIKE '(___) ___-____');
+
+ALTER TABLE PhysicalShop
+ADD CONSTRAINT check_PhoneNumber
+CHECK (PhoneNumber LIKE '(___) ___-____');
+
+ALTER TABLE User
+ADD CONSTRAINT check_PhoneNumber
+CHECK (PhoneNumber LIKE '(___) ___-____');
+
+ALTER TABLE User
+ADD CONSTRAINT check_valid_email
+CHECK (email ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+
+ALTER TABLE MusicGroup
+ADD CONSTRAINT check_ActiveStatus
+CHECK (ActiveStatus IN ('active', 'disbanded'));
+
+ALTER TABLE Calendar
+ADD CONSTRAINT check_TimeSlot
+CHECK (TimeSlot >= 0 AND TimeSlot <= 23);
+
+ALTER TABLE ConcertLocation
+ADD CONSTRAINT check_lat_long
+CHECK (latitude BETWEEN -90 and 90 AND longitude BETWEEN -180 and 180);
+
+
