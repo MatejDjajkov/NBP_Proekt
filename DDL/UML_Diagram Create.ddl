@@ -178,15 +178,15 @@ ALTER TABLE Concert ADD CONSTRAINT FKConcert232883 FOREIGN KEY (ConcertLocationI
 
 ALTER TABLE Musician
 ADD CONSTRAINT check_PhoneNumber
-CHECK (PhoneNumber LIKE '(___) ___-____');
+CHECK (PhoneNumber ~ '^\([0-9]{3}\) [0-9]{3}-[0-9]{4}$');
 
 ALTER TABLE PhysicalShop
 ADD CONSTRAINT check_PhoneNumber
-CHECK (PhoneNumber LIKE '(___) ___-____');
+CHECK (PhoneNumber ~ '^\([0-9]{3}\) [0-9]{3}-[0-9]{4}$');
 
 ALTER TABLE User
 ADD CONSTRAINT check_PhoneNumber
-CHECK (PhoneNumber LIKE '(___) ___-____');
+CHECK (PhoneNumber ~ '^\([0-9]{3}\) [0-9]{3}-[0-9]{4}$');
 
 ALTER TABLE User
 ADD CONSTRAINT check_valid_email
@@ -202,4 +202,41 @@ CHECK (TimeSlot >= 0 AND TimeSlot <= 23);
 
 ALTER TABLE ConcertLocation
 ADD CONSTRAINT check_lat_long
-CHECK (latitude BETWEEN -90 and 90 AND longitude BETWEEN -180 and 180);
+CHECK (Latitude BETWEEN -90 and 90 AND Longitude BETWEEN -180 and 180);
+
+ALTER TABLE ConcertLocation
+ADD CONSTRAINT unique_latitude_longitude
+UNIQUE (Latitude, Longitude);
+
+ALTER TABLE ConcertOrganisationCompany
+ADD CONSTRAINT check_website
+CHECK (WebSite ~* '^((http|https):\\/\\/)?([A-Za-z0-9]+([\\-\\.]{1}[A-Za-z0-9]+)*\\.[A-Za-z]{2,})(:[0-9]{1,5})?(\\/([\\w#!:.?+=&%@!\\-\\/])*)?$');
+
+ALTER TABLE PhysicalShop
+ADD CONSTRAINT check_lat_long
+CHECK (Latitude BETWEEN -90 and 90 AND Longitude BETWEEN -180 and 180);
+
+ALTER TABLE PhysicalShop
+ADD CONSTRAINT unique_latitude_longitude
+UNIQUE (Latitude, Longitude);
+
+ALTER TABLE Ticket
+ADD CONSTRAINT check_status
+CHECK (Status IN ('sold', 'expired', 'available'));
+
+ALTER TABLE Ticket
+ADD CONSTRAINT unique_ticket_details
+UNIQUE (ConcertID, Row, SeatNo);
+
+ALTER TABLE Payment
+ADD CONSTRAINT check_payment_method
+CHECK (PaymentMethod IN ('Credit card', 'Debit Card', 'PayPal'));
+
+ALTER TABLE ResaleListing
+ADD CONSTRAINT valid_listing_status
+CHECK (Status IN ('expired', 'sold', 'available'));
+
+
+
+
+
