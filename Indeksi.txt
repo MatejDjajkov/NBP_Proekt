@@ -1,0 +1,45 @@
+1. ResaleTickets View
+- Подобрување на прашалник (за да се намали број на редици кои треба да се процесираат и подобрување на перформанси):
+CREATE VIEW Resale_Tickets AS
+SELECT *
+FROM Ticket
+WHERE Status = 'available';
+- Додавање индекс на Status колона затоа што таа се користи како филтер (ако фрекфентно се update-ира Ticket табела ова може да не е добра идеја)
+---------------------------------------------------
+2. UserTickets View
+- Подобрување на прашалник (since we are only interested in tickets for a specific user, we can consider placing the JOIN clauses related to the user (Consumer, AppUser, and WHERE clause) first in the FROM clause):
+CREATE VIEW UserTickets AS
+SELECT t.TicketID, c.ConcertName, cl.VenueName, c.ConcertDate, t.Status
+FROM Consumer con
+JOIN AppUser au ON con.AppUserID = au.UserID
+JOIN TicketOrder tor ON con.ConsumerID = tor.ConsumerID
+JOIN Ticket t ON tor.OrderID = t.OrderID
+JOIN Concert c ON t.ConcertID = c.ConcertID
+JOIN ConcertLocation cl ON c.ConcertLocationID = cl.ConcertLocationID
+JOIN ConcertOrganisationCompany coc ON t.ConcertOrganisationID = coc.CompanyID
+WHERE au.UserID = [USER ID];
+- Додавање индекс на UserID колона затоа што таа се користи како филтер (ако фрекфентно се update-ираат табелите на кои правиме JOIN ова може да не е добра идеја)
+---------------------------------------------------
+3. FutureConcertsWithAvailableTickets View 
+Филтри: 
+t.Status = 'Available'
+t.ValidUntil >= NOW()::DATE
+cal.CalendarDate >= NOW()::DATE
+- Подобрување на прашалник (since we are only interested in future concerts, we can consider placing the WHERE clause related to the concert date (cal.CalendarDate) first in the FROM clause):
+CREATE VIEW FutureConcerts AS
+SELECT c.ConcertName, cl.VenueName, cl.City, cl.State, cal.CalendarDate, COUNT(t.TicketID) AS AvailableTickets
+FROM Calendar cal
+JOIN Concert c ON cal.ConcertID = c.ConcertID
+JOIN ConcertLocation cl ON c.ConcertLocationID = cl.ConcertLocationID
+LEFT JOIN Ticket t ON c.ConcertID = t.ConcertID AND t.Status = 'Available' AND t.ValidUntil >= NOW()::DATE
+WHERE cal.CalendarDate >= NOW()::DATE
+GROUP BY c.ConcertName, cl.VenueName, cl.City, cl.State, cal.CalendarDate
+HAVING COUNT(t.TicketID) > 0
+ORDER BY cal.CalendarDate;
+- Додавање индекс на CalendarDate, ConcertID, and Status колона затоа што тие се користат како филтер (ако фрекфентно се update-ираат табелите на кои правиме JOIN ова може да не е добра идеја)
+---------------------------------------------------
+4. AvailableTicketsAtPhysicalLocation View
+- Додавање индекс на: Ticket.Status, Ticket.PhysicalShopID, Ticket.ConcertID, ConcertLocation.ConcertLocationID (ако фрекфентно се update-ираат табелите на кои правиме JOIN ова може да не е добра идеја)
+---------------------------------------------------
+5. ConcertPerformers View
+- Додавање индекс на: MusicGroup or SoloMusician колони за да се одреди каде свири одреден музичар (ако фрекфентно се update-ираат табелите на кои правиме JOIN ова може да не е добра идеја)
