@@ -1,7 +1,10 @@
-CREATE VIEW AvailableTicketsAtPhysicalLocation AS
-SELECT Ticket.TicketID, Ticket.ConcertID, Concert.ConcertName, ConcertLocation.VenueName, PhysicalShop.Address, Ticket.Price, Ticket.Status, Ticket.ValidUntil
-FROM Ticket
-LEFT JOIN PhysicalShop ON Ticket.PhysicalShopID = PhysicalShop.PhysicalShopID
-LEFT JOIN Concert ON Ticket.ConcertID = Concert.ConcertID
-LEFT JOIN ConcertLocation ON Concert.ConcertLocationID = ConcertLocation.ConcertLocationID;
-WHERE Status IN ('available');
+CREATE view TicketsAtShopLocation as
+WITH TicketsLocation (ticketid,physicalshopid,concertid,price) as(
+select ticketid,physicalshopid,concertid,price
+from ticket
+where physicalshopid IS NOT NULL
+AND status='available')
+select t.ticketid,t.concertid,t.price,c.concertname,c.concertdate,p.physicalshopid,
+       p.shopname,p.city,p.state,p.address,p.phonenumber
+from TicketsLocation t join physicalshop p on t.physicalshopid=p.physicalshopid
+join concert c on c.concertid=t.concertid;

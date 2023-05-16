@@ -1,17 +1,8 @@
 CREATE VIEW ConcertPerformers AS
-SELECT
-  c.ConcertID,
-  cg.GroupName AS MusicGroup,
-  sm.FirstName || ' ' || sm.LastName AS SoloMusician
-FROM
-  Concert c
-LEFT JOIN
-  MusicGroup_Concert mgc ON c.ConcertID = mgc.ConcertID
-LEFT JOIN
-  MusicGroup cg ON mgc.MusicGroupID = cg.MusicGroupID
-LEFT JOIN
-  SoloMusician_Concert smc ON c.ConcertID = smc.ConcertID
-LEFT JOIN
-  SoloMusician sm ON smc.SoloMusicianID = sm.SoloMusicianID;
-<------------------------------>
-SELECT * FROM ConcertPerformers;
+SELECT con.concertid,con.concertname,mus.musicgroupid,mus.groupname,mss.musicianid,mss.stagename
+from concert con join musicgroup_concert mc on con.concertid = mc.concertid
+JOIN musicgroup mus on mc.musicgroupid = mus.musicgroupid
+left JOIN solomusician_concert sc on con.concertid = sc.concertid
+left join solomusician s on sc.solomusicianid = s.solomusicianid
+left join musician mss on s.musicianid=mss.musicianid;
+
