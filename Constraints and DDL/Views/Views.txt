@@ -1,0 +1,17 @@
+--
+CREATE VIEW UsersTickets AS
+SELECT c2.concertname, COUNT(*) AS total_tickets_for_concert
+FROM appuser a
+JOIN consumer c ON a.userid = c.appuserid
+JOIN ticketorder t ON c.consumerid = t.consumerid
+JOIN ticket t2 ON t.orderid = t2.orderid
+JOIN concert c2 ON t2.concertid = c2.concertid
+WHERE a.email = 'mendozaapril@example.net'
+GROUP BY c2.concertname;
+--
+CREATE VIEW ConcertTicketStatus AS
+SELECT t.status, COUNT(*) AS total_tickets
+FROM concert c
+JOIN ticket t ON c.concertid = t.concertid
+WHERE c.concertdate = '2021-07-15'
+GROUP BY t.status;
