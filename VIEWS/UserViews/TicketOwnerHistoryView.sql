@@ -16,3 +16,5 @@ from ticketsthatusersown
 where consumerid=45680
 and validuntil >CURRENT_DATE
 and dateto IS NULL;
+
+

@@ -16,6 +16,6 @@ FROM resalelisting
          JOIN ticket t ON resalelisting.ticketid = t.ticketid
          JOIN concert c2 ON t.concertid = c2.concertid;
 
-select *
-from resalelisting
+select ticketid,concertname,concertdate,username,resellprice,exparationdate
+from reselllistings
 where status='available';

@@ -15,3 +15,12 @@ FROM concert con
 select *
 from concertperformers
 where concertid=600;
+
+select venuename,state,city,address
+from concert
+join concertlocation c on concert.concertlocationid = c.concertlocationid
+where concertid=677;
+
+select groupname,stagename
+from concertperformers
+where concertid=670;
